@@ -1,8 +1,8 @@
-to start project first of all activate venv
+to start project first of all activate venv in CST directory
 ```
 source ./venv/bin/activate
 ```
-then make migrations 
+then make migrations in cstsocial directory ( cd sctsocial)
 ```
 python manage.py migrate
 ```
