@@ -52,6 +52,17 @@ def edit_profile(request, id):
     )
 
 
+@login_required(login_url="users:login")
+def delete_user(request, id):
+    if request.user.is_authenticated and request.user.profile.id == id:
+        request.user.delete()
+        messages.success(request, "Your account has been deleted")
+        return redirect("users:login")
+    else:
+        messages.error(request, "You can only delete your own account")
+        return redirect("users:dashboard")
+
+
 def registerUser(request):
     page = "register"
     form = CustomUserCreationForm()
