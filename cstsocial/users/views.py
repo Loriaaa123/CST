@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, EditProfileForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -31,6 +31,25 @@ def profile(request, id):
         current_user.save()
     context = {"profile": profile}
     return render(request, "users/profile.html", context)
+
+
+@login_required(login_url="users:login")
+def edit_profile(request, id):
+    profile = Profile.objects.get(id=id)
+    form = EditProfileForm(request.POST or None, instance=profile)
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your account has been updated")
+            return redirect("users:profile", id=profile.id)
+        else:
+            messages.error(request, "Invalid form")
+            return redirect("users:edit_profile")
+
+    return render(
+        request, "users/edit_profile.html", {"profile": profile, "form": form}
+    )
 
 
 def registerUser(request):
