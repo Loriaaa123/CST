@@ -1,0 +1,146 @@
+{% extends 'base.html' %} {% block content %}
+<!--this if statement is for checking private profile and if they are friends-->
+{% if profile.private_profile and profile != request.user.profile and request.user.profile not in profile.friends.all %}
+<div class="block">
+  <h1 class="title is-1">{{profile.user.username|upper}}'s Posts</h1>
+</div>
+<form method="post">
+  {% csrf_token %}
+  <div class="buttons has-addons">
+    {% if profile in user.profile.friends.all %}
+    <button class="button is-success is-static">Add as a Friend</button>
+    <button class="button is-danger" name="add_friend" value="Remove">
+      Remove From Friends
+    </button>
+    {% else %}
+    <button class="button is-success" name="add_friend" value="Add">
+      Add as a Friend
+    </button>
+    <button class="button is-danger is-static">Remove From Friends</button>
+    {% endif %}
+  </div>
+</form>
+{% else %}
+<div class="columns">
+  <div class="column">
+    <div class="block">
+      <h1 class="title is-1">{{profile.user.username|upper}}'s Posts</h1>
+      <p>{{profile.bio}}</p>
+    </div>
+    {% if profile != request.user.profile %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="buttons has-addons">
+        {% if profile in user.profile.friends.all %}
+        <button class="button is-success is-static">Add as a Friend</button>
+        <button class="button is-danger" name="add_friend" value="Remove">
+          Remove From Friends
+        </button>
+        {% else %}
+        <button class="button is-success" name="add_friend" value="Add">
+          Add as a Friend
+        </button>
+        <button class="button is-danger is-static">Remove From Friends</button>
+        {% endif %}
+      </div>
+    </form>
+    {% endif %}
+    <div class="box">
+      <div class="content">
+        {% for post in profile.user.post.all %}
+        <div class="box">
+          <div class="box">
+            <span class="is-small has-text-grey-light">
+              ({{ post.created_at }})
+            </span>
+            {% if post.user == request.user %}
+            <a href="{% url 'users:update_post' post.id %}"
+              ><button class="button is-small is-warning" type="click">Edit</button></a
+            >
+            <a href="{% url 'users:delete_post' post.id %}"
+              ><button class="button is-small is-danger" type="click">Del</button></a
+            >
+            {% endif %}
+            <br />
+            {{ post.body }}
+          </div>
+          <!--comments of friends-->
+          {% if not post.comments.all %}
+          <hr />
+          <h3>There is no comments</h3>
+          {% else %}
+          <hr />
+          <h3>Comments:</h3>
+          {% for comment in post.comments.all %}
+          <div class="box">
+            {{ comment.body }}
+            <span class="is-small has-text-grey-light">
+              {{ comment.created_at }} by {{ comment.user.username }}
+            </span>
+            {% if comment.user == request.user %}
+            <a href="{% url 'users:delete_comment' comment.id %}"
+              ><button class="button is-small is-danger" type="click">Del</button></a
+            >
+            {% endif %}
+          </div>
+          {% endfor %} {% endif %}
+          <div>
+            <a href="{% url 'users:post_detail' post.id %}">
+              <button class="button is-primary is-rounded">Add Comment</button>
+            </a>
+          </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="column is-one-third">
+      <div class="block">
+        <a href="{% url 'users:profile_list' %}">
+          <button class="button is-dark is-outlined is-fullwidth">
+            All Profiles
+          </button>
+        </a>
+      </div>
+      {% if request.user.profile == profile %}
+      <div class="block">
+        <a href="{% url 'users:edit_profile' profile.id%}">
+          <button class="button is-dark is-outlined is-fullwidth">
+            Edit Profiles
+          </button>
+        </a>
+      </div>
+      <div class="block">
+        <a href="{% url 'users:delete_user' profile.id %}">
+          <button class="button is-danger is-outlined is-fullwidth">
+            Delete Profile and User
+          </button>
+        </a>
+      </div>
+      {% endif %}
+      <div class="block">
+        <a href="{% url 'users:logout'%}">
+          <button class="button is-dark is-outlined is-fullwidth">
+            Logout
+          </button>
+        </a>
+      </div>
+
+      <div class="block">
+        <h3 class="title is-4">{{profile.user.username}} Friends:</h3>
+        <div class="content">
+          <ul>
+            {% for friend in profile.friends.all %}
+            <li>
+              <a href="{% url 'users:profile' friend.id %}"> {{ friend }} </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock content %}
+</div>
