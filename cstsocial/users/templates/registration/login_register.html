@@ -1,24 +1,22 @@
-{% extends 'main.html' %}
-<!----->
-{% load static %}
+{% extends 'base.html' %}
 <!----->
 {% block content %}
 <!----->
 
 {% if page == 'register' %}
 
-<div class="auth">
-  <div class="card">
-    <div class="auth__header text-center">
-      <a href="{% url 'dashboard' %}">
-        <h1>Homepage</h1>
-      </a>
-      <h3>Register an Account</h3>
-    </div>
+<section class="hero is-primary is-fullheight">
+  <div class="hero-body">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-half">
+    <div class="title text-center">
+      <h2>Register an Account</h2>
+    </div> 
 
-    <form method="POST" action="{% url 'register' %}" class="form auth__form">
+    <form method="POST" action="{% url 'users:register' %}" class="box">
       {% csrf_token %} {% for field in form %}
-      <div class="form__field">
+      <div class="field">
         <label for="formInput#text">{{field.label}}</label>
         {{field}}
 
@@ -33,32 +31,32 @@
 
       {% endfor %}
 
-      <div class="auth__actions">
-        <input class="btn btn--sub btn--lg" type="submit" value="Sign  In" />
+      <div class="field">
+        <br/>
+        <input class="button is-primary" type="submit" value="Sign  Up" />
       </div>
     </form>
-    <div class="auth__alternative">
-      <p>Already have an Account?</p>
-      <a href="{% url 'login' %}">Log In</a>
+    <div class="box">
+      <h4>Already have an Account?</h4>
+      <a href="{% url 'users:login' %}"><button class="button is-primary">Log In</button></a>
     </div>
   </div>
 </div>
+</div>
+</div>
+</section>
 
 {% else %}
 
-<div class="auth">
-  <div class="card">
-    <div class="auth__header text-center">
-      <a href="{% url 'dashboard' %}">
-        <h1>Homepage<h1>
-      </a>
-      <h3>Account Login</h3>
-    </div>
-
-    <form action="" method="POST" class="form auth__form">
+<section class="hero is-primary is-fullheight">
+  <div class="hero-body">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-half">
+    <form action="" method="POST" class="box">
       {% csrf_token %}
       <!-- Input:Username -->
-      <div class="form__field">
+      <div class="field">
         <label for="formInput#text">Username: </label>
         <input
           class="input input--text"
@@ -70,7 +68,7 @@
       </div>
 
       <!-- Input:Password -->
-      <div class="form__field">
+      <div class="field">
         <label for="formInput#password">Password: </label>
         <input
           class="input input--password"
@@ -81,18 +79,19 @@
         />
       </div>
 
-      <div class="auth__actions">
-        <input class="btn btn--sub btn--lg" type="submit" value="Log In" />
+      <div class="field">
+        <br />
+        <input class="button is-primary" type="submit" value="Sign In" />
       </div>
     </form>
 
-    <div class="auth__alternative">
+    <div class="box">
       <p>Dont have an Account?</p>
-      <a href="{% url 'register' %}">Sign Up</a>
-    </div>
-  </div>
+      <a href="{% url 'users:register' %}"><button class="button is-primary">Sign Up</button></a>
 </div>
-
+</div>
+</div>
+</section>
 {% endif %}
 <!---->
 {% endblock content %}
