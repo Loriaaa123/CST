@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+<!---->
+{% block content %}
+<div class="box">
+  {{ post.body }}
+  <span class="is-small has-text-grey-light">
+    {{ post.created_at }} by {{ post.user.username }}
+  </span>
+  {% if post.user == request.user %}
+  <a href="{% url 'feed:update_post' post.id %}"
+    ><button class="button is-small is-warning" type="click">Edit</button></a
+  >
+  <a href="{% url 'feed:delete_post' post.id %}"
+    ><button class="button is-small is-danger" type="click">Del</button></a
+  >
+  {% endif %}
+  <!--comments of friends-->
+  {% if not post.comments.all %}
+  <hr />
+  <h1><strong>There is no comments </strong></h1>
+  {% else %}
+  <hr />
+  <h1><strong>Comments:</strong></h1>
+  {% for comment in post.comments.all %}
+  <div class="box">
+    {{ comment.body }}
+    <!---->
+    {% if comment.user == request.user %}
+    <a href="{% url 'feed:delete_comment' comment.id %}"
+      ><button class="button is-small is-danger" type="click">Del</button></a
+    >
+    {% endif %}
+    <span class="is-small has-text-grey-light">
+      {{ comment.created_at }} by {{ comment.user.username }}
+    </span>
+  </div>
+  {% endfor %}
+  <!---->
+  {% endif %}
+
+  <div class="field has-addons">
+    <form class="" method="post">
+      {% csrf_token %} {{form.as_p}}
+      <div class="control">
+        <button name="comment_button" class="button is-primary" type="submit">
+          Comment
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

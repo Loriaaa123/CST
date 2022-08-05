@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block content %}
+<div class="field has-addons">
+  <form class="" method="post">
+    {% csrf_token %} {% for field in form.fields %}{% endfor %} {{form}}
+    <div class="control">
+      <button name="comment_button" class="button is-primary" type="submit">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock content %}
