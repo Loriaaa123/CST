@@ -12,8 +12,8 @@
         {{ post.created_at }} by {{ post.user.username }}
       </span>
       {% if post.user == request.user %}
-      <a href="{% url 'users:update_post' post.id %}"><button class="button is-small is-warning" type="click">Edit</button></a>
-      <a href="{% url 'users:delete_post' post.id %}"><button class="button is-small is-danger" type="click">Del</button></a>
+      <a href="{% url 'feed:update_post' post.id %}"><button class="button is-small is-warning" type="click">Edit</button></a>
+      <a href="{% url 'feed:delete_post' post.id %}"><button class="button is-small is-danger" type="click">Del</button></a>
       {% endif %}
       <!--comments of friends-->
       {% if not post.comments.all %}
@@ -29,13 +29,13 @@
            {{ comment.created_at }} by {{ comment.user.username }}
           </span>
           {% if comment.user == request.user %}
-          <a href="{% url 'users:delete_comment' comment.id %}"><button class="button is-small is-danger" type="click">Del</button></a>
+          <a href="{% url 'feed:delete_comment' comment.id %}"><button class="button is-small is-danger" type="click">Del</button></a>
           {% endif %}
       </div>
       {% endfor %}
       {% endif %}
       <div>
-        <a href="{% url 'users:post_detail' post.id %}">
+        <a href="{% url 'feed:post_detail' post.id %}">
           <button class="button is-primary is-rounded">Add Comment</button>
         </a>
       </div>

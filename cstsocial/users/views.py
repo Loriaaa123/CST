@@ -6,10 +6,6 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Profile
 
-# Create your views here.
-def dashboard(request):
-    return render(request, "users/dashboard.html")
-
 
 @login_required(login_url="users:login")
 def profile_list(request):
@@ -60,7 +56,7 @@ def delete_user(request, id):
         return redirect("users:login")
     else:
         messages.error(request, "You can only delete your own account")
-        return redirect("users:dashboard")
+        return redirect("feed:dashboard")
 
 
 def registerUser(request):
@@ -74,7 +70,7 @@ def registerUser(request):
             user.save()
             messages.success(request, "You have successfully registered")
             login(request, user)
-            return redirect("dashboard")
+            return redirect("feed:dashboard")
         else:
             messages.error(request, "Invalid form")
             return redirect("register")
@@ -86,7 +82,7 @@ def loginUser(request):
     page = "login"
 
     if request.user.is_authenticated:
-        return redirect("dashboard")
+        return redirect("feed:dashboard")
 
     if request.method == "POST":
         username = request.POST["username"].lower()
@@ -100,10 +96,10 @@ def loginUser(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect("dashboard")
+            return redirect("feed:dashboard")
         else:
             messages.error(request, "Invalid username or password")
-            return redirect("login")
+            return redirect("users:login")
     context = {"page": page}
     return render(request, "registration/login_register.html", context)
 
@@ -111,4 +107,4 @@ def loginUser(request):
 def logoutUser(request):
     logout(request)
     messages.success(request, "You have been logged out successfully")
-    return redirect("login")
+    return redirect("users:login")

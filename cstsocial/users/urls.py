@@ -1,8 +1,9 @@
-from django.urls import path, include
+from django.urls import path
 from users import views
 
+app_name = "users"
+
 urlpatterns = [
-    path("dashboard/", views.dashboard, name="dashboard"),
     path("", views.loginUser, name="login"),
     path("logout/", views.logoutUser, name="logout"),
     path("register/", views.registerUser, name="register"),
